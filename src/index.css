@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-white/[0.03] backdrop-blur-md border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)];
+  }
+  .glow-border {
+    @apply border border-cyan-glow/40 shadow-[0_0_25px_rgba(0,229,255,0.2)];
+  }
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-cyan-300;
+  }
+}
+
+h1 {
+  font-family: 'Noto Serif Display', serif;
+  font-weight: 700;
+  font-stretch: extra-condensed;
+  line-height: 0.92;
+}
+
+h2 {
+  font-family: 'Noto Serif Display', serif;
+  font-weight: 700;
+  font-stretch: extra-condensed;
+  line-height: 1.0;
+}
+
+h3 {
+  font-family: 'Noto Serif Display', serif;
+  font-weight: 700;
+  font-stretch: extra-condensed;
+  line-height: 1.05;
+}
+
+h1 em, h2 em, h3 em {
+  font-style: italic;
+  font-family: 'Noto Serif Display', serif;
+  font-stretch: extra-condensed;
+}
+
+p, li, blockquote {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  position: relative;
+  background-color: #010208;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  min-height: 100vh;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+#root {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+img, video, canvas, svg {
+  max-width: 100%;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #02040A;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e3a8a;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #00E5FF;
+}
+
+/* Grid background pattern */
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ── Shader-gradient noise background ── */
+.noise-gradient-orbs {
+  background:
+    radial-gradient(ellipse 55% 45% at 15% 25%, rgba(0, 60, 220, 0.22) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 80% 15%, rgba(0, 200, 255, 0.10) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 50% at 70% 75%, rgba(60, 0, 180, 0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 35% at 35% 80%, rgba(0, 100, 255, 0.12) 0%, transparent 60%),
+    #02040A;
+  animation: orb-drift 18s ease-in-out infinite alternate;
+}
+
+@keyframes orb-drift {
+  0% {
+    background-position: 0% 0%, 100% 0%, 100% 100%, 0% 100%;
+  }
+  33% {
+    background-position: 8% 12%, 88% 8%, 92% 88%, 10% 90%;
+  }
+  66% {
+    background-position: 5% 20%, 95% 15%, 85% 80%, 15% 85%;
+  }
+  100% {
+    background-position: 12% 5%, 82% 20%, 88% 92%, 5% 95%;
+  }
+}
+
