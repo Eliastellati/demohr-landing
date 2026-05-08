@@ -3,6 +3,8 @@ import { Canvas, useFrame, extend } from '@react-three/fiber';
 import { useGLTF, Float, Trail, useAnimations, shaderMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 
+const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
 // Materiale custom per stelle con alone di luminescenza (glow) e scintillio (twinkle)
 const StarGlowMaterial = shaderMaterial(
   { 
@@ -205,9 +207,22 @@ export default function Background3D({ scrollProgress }) {
   const isLaptop = typeof window !== 'undefined' && window.innerWidth >= 1024;
   const sizeMult = isLaptop ? 1.6 : 1.2;
 
+  // Ritarda il caricamento dei pianeti (lava: 11MB + mercury: 42MB = 53MB totali)
+  // di 3 secondi per non bloccare il primo render della pagina
+  const [showPlanets, setShowPlanets] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setShowPlanets(true), 3000);
+    return () => clearTimeout(t);
+  }, []);
+
   return (
     <div className="fixed inset-0 w-full h-full bg-[#000] -z-10">
-      <Canvas shadows camera={{ position: [0, 0, 40], fov: 45 }}>
+      <Canvas
+        shadows
+        camera={{ position: [0, 0, 40], fov: 45 }}
+        dpr={[1, isMobile ? 1 : 1.5]}
+        performance={{ min: 0.5 }}
+      >
         <color attach="background" args={['#000']} />
         
         <ambientLight intensity={0.6} />
@@ -221,27 +236,33 @@ export default function Background3D({ scrollProgress }) {
         
         <Suspense fallback={null}>
           <Nebula scrollProgress={scrollProgress} />
-          <Starfield scrollProgress={scrollProgress} count={9000} />
-          
-          <Float speed={1} rotationIntensity={0.5} floatIntensity={0.5}>
-            <SketchfabPlanet 
-              url="/lava_planet.glb" 
-              size={1.5 * sizeMult} 
-              orbitRadius={7} 
-              speed={0.1} 
-              offset={0} 
-              scrollProgress={scrollProgress} 
-            />
-          </Float>
+          {/* Starfield ridotto: 5000 desktop, 2500 mobile (era 9000) */}
+          <Starfield scrollProgress={scrollProgress} count={isMobile ? 2500 : 5000} />
 
-          <SketchfabPlanet 
-            url="/mercury_planet.glb" 
-            size={0.6 * sizeMult} 
-            orbitRadius={16} 
-            speed={0.15} 
-            offset={Math.PI} 
-            scrollProgress={scrollProgress} 
-          />
+          {/* Pianeti caricati dopo 3s: lava (11MB) + mercury (42MB) = 53MB totali */}
+          {showPlanets && (
+            <>
+              <Float speed={1} rotationIntensity={0.5} floatIntensity={0.5}>
+                <SketchfabPlanet
+                  url="/lava_planet.glb"
+                  size={1.5 * sizeMult}
+                  orbitRadius={7}
+                  speed={0.1}
+                  offset={0}
+                  scrollProgress={scrollProgress}
+                />
+              </Float>
+
+              <SketchfabPlanet
+                url="/mercury_planet.glb"
+                size={0.6 * sizeMult}
+                orbitRadius={16}
+                speed={0.15}
+                offset={Math.PI}
+                scrollProgress={scrollProgress}
+              />
+            </>
+          )}
 
           <ShootingStar />
           <ShootingStar />

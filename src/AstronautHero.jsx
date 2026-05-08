@@ -55,7 +55,7 @@ function AstronautModel() {
         penumbra={0.2}
         color="#ffffff"
         castShadow
-        shadow-mapSize={[2048, 2048]}
+        shadow-mapSize={[1024, 1024]}
         shadow-bias={-0.0001}
       />
       
@@ -105,7 +105,7 @@ export default function AstronautHero() {
     <Canvas
       shadows
       camera={{ position: [0, 0, 10], fov: 45 }}
-      dpr={[1, 2]}
+      dpr={[1, 1.5]}
       gl={{ alpha: true }}
       style={{ background: 'transparent', width: '100%', height: '100%', pointerEvents: 'none' }}
     >

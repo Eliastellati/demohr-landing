@@ -82,7 +82,7 @@ export default function HelmetViewer() {
           position={[5, 10, 5]} 
           intensity={isMobile ? 3 : 7} 
           castShadow 
-          shadow-mapSize={[2048, 2048]} 
+          shadow-mapSize={[1024, 1024]} 
         />
         
         {/* Blue rim light - More intense */}

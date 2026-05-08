@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect, Suspense } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import {
-  Users, Calendar, FileText, Bot, Shield, ArrowRight,
-  Clock, CheckCircle, Database, Lock, AlertCircle, LayoutDashboard,
+  Users, Calendar, FileText, ArrowRight,
+  Clock, CheckCircle, Database, AlertCircle, LayoutDashboard,
   ShieldCheck, FileSpreadsheet, Stethoscope, Briefcase
 } from 'lucide-react';
 import Background3D from './Background3D';
@@ -90,6 +90,8 @@ const FeatureSection = ({ id, title, subtitle, content, align = "left", iconName
                       src={imageSrc}
                       alt={`${title} Screenshot`}
                       className="w-full h-auto block relative z-10 max-w-full object-contain"
+                      loading="lazy"
+                      decoding="async"
                     />
                   ) : (
                     <div className="w-full h-full p-6 flex flex-col gap-4">
@@ -130,6 +132,11 @@ function App() {
   const [isDemoOpen, setIsDemoOpen] = useState(false);
   const openDemo = () => setIsDemoOpen(true);
 
+  // Ritarda il mount del Canvas astronauta di 800ms per non bloccare il primo paint
+  const [showAstronaut, setShowAstronaut] = useState(false);
+  // Monta l'elmo solo quando la sezione Anagrafica è vicina alla viewport
+  const [showHelmet, setShowHelmet] = useState(false);
+
   const { scrollYProgress: globalScrollProgress } = useScroll();
 
   const { scrollYProgress: heroScrollProgress } = useScroll({
@@ -167,6 +174,30 @@ function App() {
     });
 
     return () => observer.disconnect();
+  }, []);
+
+  // Avvia il download del modello astronauta (45MB) dopo 800ms,
+  // lasciando che il browser finisca prima il primo paint della pagina
+  useEffect(() => {
+    const t = setTimeout(() => setShowAstronaut(true), 800);
+    return () => clearTimeout(t);
+  }, []);
+
+  // Carica l'elmo (2.6MB) solo quando la sezione Anagrafica è a 500px dalla viewport
+  useEffect(() => {
+    const el = anagraficaRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShowHelmet(true);
+          obs.disconnect();
+        }
+      },
+      { rootMargin: '500px' }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
   }, []);
 
   return (
@@ -235,9 +266,11 @@ function App() {
           style={{ opacity: opacityHero }}
           className="absolute inset-0 z-[5] md:z-20 pointer-events-none opacity-30 md:opacity-100"
         >
-          <Suspense fallback={null}>
-            <AstronautHero />
-          </Suspense>
+          {showAstronaut && (
+            <Suspense fallback={null}>
+              <AstronautHero />
+            </Suspense>
+          )}
         </motion.div>
 
         <motion.div
@@ -352,9 +385,11 @@ function App() {
               style={{ opacity: helmetOpacity, y: helmetY }}
               className="absolute inset-0 pointer-events-none z-[5]"
             >
-              <Suspense fallback={null}>
-                <HelmetViewer />
-              </Suspense>
+              {showHelmet && (
+                <Suspense fallback={null}>
+                  <HelmetViewer />
+                </Suspense>
+              )}
             </motion.div>
           </div>
           <FeatureSection
