@@ -10,6 +10,29 @@ function AstronautModel() {
   const { actions } = useAnimations(animations, group);
 
   useEffect(() => {
+    if (scene) {
+      scene.traverse((node) => {
+        if (node.isMesh) {
+          node.castShadow = true;
+          node.receiveShadow = true;
+          if (node.material) {
+            // Premium metallic look for the suit and visor
+            node.material.metalness = 0.8;
+            node.material.roughness = 0.2;
+            
+            // If it's the visor (usually named something with glass or visor)
+            if (node.name.toLowerCase().includes('visor') || node.name.toLowerCase().includes('glass')) {
+              node.material.metalness = 1.0;
+              node.material.roughness = 0.05;
+              node.material.envMapIntensity = 2.5;
+            }
+          }
+        }
+      });
+    }
+  }, [scene]);
+
+  useEffect(() => {
     if (actions && Object.keys(actions).length > 0) {
       Object.values(actions)[0].play();
     }
@@ -24,17 +47,54 @@ function AstronautModel() {
 
   return (
     <group ref={group} position={isMobile ? [0, -0.5, 0] : [4.5, -0.3, 0]} rotation={[0.1, -0.6, 0]}>
+      {/* Primary key light - PURE WHITE and strong */}
       <spotLight
-        position={[-3, 8, 6]}
-        intensity={isMobile ? 80 : 400}
-        angle={0.35}
-        penumbra={0.4}
+        position={[-3, 10, 8]}
+        intensity={isMobile ? 180 : 1000}
+        angle={0.3}
+        penumbra={0.2}
         color="#ffffff"
         castShadow
-        shadow-mapSize={[1024, 1024]}
-        shadow-bias={-0.001}
+        shadow-mapSize={[2048, 2048]}
+        shadow-bias={-0.0001}
       />
-      <pointLight position={[6, 2, -3]} intensity={isMobile ? 8 : 40} color="#00aaff" distance={18} decay={2} />
+      
+      {/* Neutral highlight side */}
+      <pointLight 
+        position={[8, 4, -2]} 
+        intensity={isMobile ? 30 : 150} 
+        color="#ffffff" 
+        distance={30} 
+        decay={1.5} 
+      />
+      
+      {/* Subtle Azure Rim for the visor reflections */}
+      <pointLight 
+        position={[5, 2, 5]} 
+        intensity={isMobile ? 20 : 100} 
+        color="#00d2ff" 
+        distance={15} 
+        decay={2} 
+      />
+
+      {/* Another azure accent from below */}
+      <pointLight 
+        position={[-5, -2, 2]} 
+        intensity={isMobile ? 10 : 40} 
+        color="#00aaff" 
+        distance={12} 
+        decay={2} 
+      />
+
+      {/* Neutral back light for separation */}
+      <spotLight
+        position={[2, 5, -12]}
+        intensity={isMobile ? 60 : 300}
+        angle={0.5}
+        penumbra={1}
+        color="#ffffff"
+      />
+
       <primitive object={scene} scale={4.5} castShadow receiveShadow />
     </group>
   );

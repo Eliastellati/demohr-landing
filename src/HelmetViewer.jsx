@@ -14,6 +14,27 @@ function HelmetModel({ isMobile }) {
   const mouse = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
+    if (scene) {
+      scene.traverse((node) => {
+        if (node.isMesh) {
+          node.castShadow = true;
+          node.receiveShadow = true;
+          if (node.material) {
+            // Make it more metallic and slightly brighter base for contrast
+            node.material.metalness = 1.0;
+            node.material.roughness = 0.05;
+            node.material.envMapIntensity = 2.0;
+            // Slightly brighter base color to allow for highlights to pop
+            if (node.material.color) {
+              node.material.color.multiplyScalar(0.6);
+            }
+          }
+        }
+      });
+    }
+  }, [scene]);
+
+  useEffect(() => {
     if (isMobile) return;
     const onMove = (e) => {
       mouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
@@ -48,14 +69,31 @@ export default function HelmetViewer() {
   return (
     <GLBErrorBoundary>
       <Canvas
+        shadows
         camera={{ position: [0, 0, 10], fov: 45 }}
         dpr={[1, 2]}
-        gl={{ alpha: true }}
+        gl={{ alpha: true, antialias: true }}
         style={{ background: 'transparent', width: '100%', height: '100%', pointerEvents: 'none' }}
       >
-        <ambientLight intensity={isMobile ? 0.02 : 0.08} />
-        <directionalLight position={[4, 8, 5]} intensity={isMobile ? 1.5 : 5} castShadow shadow-mapSize={[1024, 1024]} />
-        <pointLight position={[5, 1, -3]} intensity={isMobile ? 0.4 : 1.5} color="#3366ff" distance={20} decay={2} />
+        <ambientLight intensity={0.01} />
+        
+        {/* Main dramatic light - Brighter */}
+        <directionalLight 
+          position={[5, 10, 5]} 
+          intensity={isMobile ? 3 : 7} 
+          castShadow 
+          shadow-mapSize={[2048, 2048]} 
+        />
+        
+        {/* Blue rim light - More intense */}
+        <pointLight position={[5, 2, -3]} intensity={isMobile ? 2 : 5} color="#00d2ff" distance={25} decay={2} />
+        
+        {/* Front accent for highlights */}
+        <pointLight position={[-4, 1, 5]} intensity={isMobile ? 1.5 : 4} color="#ffffff" distance={20} decay={2} />
+
+        {/* Back light for separation */}
+        <spotLight position={[-5, 8, -5]} intensity={3} color="#ffffff" angle={0.3} penumbra={1} />
+
         <Suspense fallback={null}>
           <Float
             speed={isMobile ? 0.35 : 0.7}
@@ -64,7 +102,8 @@ export default function HelmetViewer() {
           >
             <HelmetModel isMobile={isMobile} />
           </Float>
-          <Environment preset="studio" />
+          {/* Night preset with higher intensity for reflections */}
+          <Environment preset="night" environmentIntensity={1.5} />
         </Suspense>
       </Canvas>
     </GLBErrorBoundary>

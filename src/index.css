@@ -15,34 +15,25 @@
 }
 
 h1 {
-  font-family: 'Noto Serif Display', serif;
   font-weight: 700;
-  font-stretch: extra-condensed;
-  line-height: 0.92;
-}
-
-h2 {
-  font-family: 'Noto Serif Display', serif;
-  font-weight: 700;
-  font-stretch: extra-condensed;
-  line-height: 1.0;
-}
-
-h3 {
-  font-family: 'Noto Serif Display', serif;
-  font-weight: 700;
-  font-stretch: extra-condensed;
   line-height: 1.05;
 }
 
-h1 em, h2 em, h3 em {
+h2 {
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+h3 {
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+em {
   font-style: italic;
-  font-family: 'Noto Serif Display', serif;
-  font-stretch: extra-condensed;
 }
 
 p, li, blockquote {
-  font-family: 'DM Sans', sans-serif;
   font-weight: 400;
   line-height: 1.45;
 }

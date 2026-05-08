@@ -116,7 +116,7 @@ export default function DemoFormOverlay({ isOpen, onClose }) {
             >
               <div className="flex items-center gap-3">
                 <span className="h-px w-6 bg-cyan-glow/40" />
-                <span className="text-[11px] tracking-[0.22em] uppercase text-cyan-glow/60" style={{ fontFamily: 'DM Sans' }}>
+                <span className="text-[11px] tracking-[0.22em] uppercase text-cyan-glow/60">
                   DemoHR
                 </span>
               </div>
@@ -124,7 +124,7 @@ export default function DemoFormOverlay({ isOpen, onClose }) {
               <div>
                 <h2
                   className="text-[5.5rem] xl:text-[6.5rem] font-bold text-white/90"
-                  style={{ fontFamily: 'Noto Serif Display', fontStretch: 'extra-condensed', lineHeight: 0.9 }}
+                  style={{ lineHeight: 0.9 }}
                 >
                   Prendi il<br />
                   controllo<br />
@@ -146,7 +146,7 @@ export default function DemoFormOverlay({ isOpen, onClose }) {
                       className="w-1 h-1 rounded-full shrink-0"
                       style={{ background: 'oklch(0.82 0.14 200 / 0.5)' }}
                     />
-                    <span className="text-sm text-white/40" style={{ fontFamily: 'DM Sans' }}>{item}</span>
+                    <span className="text-sm text-white/40">{item}</span>
                   </motion.div>
                 ))}
               </div>
