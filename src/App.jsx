@@ -1,14 +1,13 @@
 import React, { useRef, useState, useEffect, Suspense } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   Users, Calendar, FileText, ArrowRight,
   Clock, CheckCircle, Database, AlertCircle, LayoutDashboard,
   ShieldCheck, FileSpreadsheet, Stethoscope, Briefcase
 } from 'lucide-react';
-import Background3D from './Background3D';
-import AstronautHero from './AstronautHero';
-import HelmetViewer from './HelmetViewer';
 import DemoFormOverlay from './DemoFormOverlay';
+import { GLSLHills } from './GLSLHills';
+import { GlowCard } from './GlowCard';
 import logoNoBg from '../images/logo_no_bg.png';
 import imgAnagrafica from '../images/Anagrafica.png';
 import imgPresenze from '../images/presenze.png';
@@ -26,13 +25,13 @@ const moduleIcons = {
   scadenze: Stethoscope
 };
 
-
-const FadeIn = ({ children, delay = 0 }) => (
+const FadeIn = ({ children, delay = 0, className = '' }) => (
   <motion.div
     initial={{ opacity: 0, y: 30 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true, margin: "-100px" }}
     transition={{ duration: 0.8, delay }}
+    className={className}
   >
     {children}
   </motion.div>
@@ -40,19 +39,55 @@ const FadeIn = ({ children, delay = 0 }) => (
 
 const FeatureSection = ({ id, title, subtitle, content, align = "left", iconName, features = [], imageSrc }) => {
   const Icon = moduleIcons[iconName] || FileText;
+  const mockupRef = useRef(null);
+
+  const handleMouseMove = (e) => {
+    const card = mockupRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const xc = rect.width / 2;
+    const yc = rect.height / 2;
+    const dx = (x - xc) / xc;
+    const dy = (y - yc) / yc;
+
+    // Max 10 degrees tilt
+    const rotateX = -dy * 10;
+    const rotateY = dx * 10;
+
+    // Shadow moves in the opposite direction of mouse to simulate a realistic light source
+    const shadowX = -dx * 12;
+    const shadowY = -dy * 12;
+    // Shadow blur varies based on tilt height lift
+    const shadowBlur1 = 50 + (dy * -10);
+    const shadowBlur2 = 60 + (dy * -15);
+
+    card.style.transition = 'transform 0.1s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.15s ease-out';
+    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.04, 1.04, 1.04)`;
+    card.style.boxShadow = `${shadowX}px ${shadowY + 25}px ${shadowBlur1}px rgba(0, 229, 255, 0.12), ${shadowX}px ${shadowY + 35}px ${shadowBlur2}px -15px rgba(0, 0, 0, 0.85)`;
+  };
+
+  const handleMouseLeave = () => {
+    const card = mockupRef.current;
+    if (!card) return;
+    card.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.5s ease-out';
+    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+    card.style.boxShadow = '';
+  };
 
   return (
-    <section id={id} className="relative py-16 md:py-24 z-10 border-t border-white/5 overflow-hidden w-full flex items-center justify-center">
+    <section id={id} className="relative py-10 md:py-12 xl:py-24 z-10 border-t border-white/5 overflow-hidden w-full flex items-center justify-center">
       <div className="container mx-auto px-5 md:px-8 max-w-6xl">
-        <div className={`flex flex-col gap-10 md:gap-16 items-center ${align === 'right' ? 'md:flex-row-reverse' : 'md:flex-row'}`}>
+        <div className={`flex flex-col gap-10 xl:gap-16 items-center ${align === 'right' ? 'xl:flex-row-reverse' : 'xl:flex-row'}`}>
 
           {/* Testo */}
-          <div className="flex-1 w-full text-center md:text-left flex flex-col items-center md:items-start">
+          <div className="flex-1 w-full text-center xl:text-left flex flex-col items-center xl:items-start">
             <FadeIn>
-              <div className="w-12 h-12 rounded-xl bg-blue-900/30 flex items-center justify-center border border-blue-500/20 mb-6 mx-auto md:mx-0">
+              <div className="w-12 h-12 rounded-xl bg-blue-900/30 flex items-center justify-center border border-blue-500/20 mb-6 mx-auto xl:mx-0">
                 <Icon className="w-6 h-6 text-cyan-glow" />
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">{title}</h2>
+              <h2 className="text-3xl xl:text-4xl module-title mb-4">{title}</h2>
               {subtitle && <h3 className="text-xl text-blue-400 mb-6">{subtitle}</h3>}
               <div className="text-gray-100 text-lg space-y-4">
                 {content}
@@ -61,7 +96,7 @@ const FeatureSection = ({ id, title, subtitle, content, align = "left", iconName
               {features.length > 0 && (
                 <ul className="mt-8 space-y-3">
                   {features.map((feat, idx) => (
-                    <li key={idx} className="flex items-start justify-center md:justify-start gap-3 text-left">
+                    <li key={idx} className="flex items-start justify-center xl:justify-start gap-3 text-left">
                       <CheckCircle className="w-5 h-5 text-cyan-glow shrink-0 mt-1" />
                       <span className="text-gray-100">{feat}</span>
                     </li>
@@ -72,9 +107,18 @@ const FeatureSection = ({ id, title, subtitle, content, align = "left", iconName
           </div>
 
           {/* Mockup Visivo / Immagine Reale */}
-          <div className="flex-1 w-full max-w-full overflow-hidden">
+          <div className="flex-1 w-full max-w-full relative">
             <FadeIn delay={0.2}>
-              <div className={`relative ${imageSrc ? 'h-auto' : 'h-[300px] md:h-[400px]'} w-full max-w-full glass-panel rounded-2xl overflow-hidden shadow-2xl flex flex-col`}>
+              <div 
+                ref={mockupRef}
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+                className={`relative ${imageSrc ? 'h-auto' : 'h-[300px] md:h-[400px]'} w-full max-w-full glass-panel rounded-2xl overflow-hidden shadow-2xl flex flex-col hover:shadow-[0_20px_50px_rgba(0,229,255,0.12),0_30px_60px_-15px_rgba(0,0,0,0.85)] hover:z-20 z-10`}
+                style={{
+                  transformStyle: 'preserve-3d',
+                  transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)',
+                }}
+              >
                <div className="h-10 border-b border-white/10 flex items-center px-4 gap-2 bg-white/5 shrink-0">
                  <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
                  <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
@@ -126,32 +170,10 @@ const FeatureSection = ({ id, title, subtitle, content, align = "left", iconName
 
 function App() {
   const heroRef = useRef(null);
-  const anagraficaRef = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
   const [isDemoOpen, setIsDemoOpen] = useState(false);
   const openDemo = () => setIsDemoOpen(true);
-
-  // Ritarda il mount del Canvas astronauta di 800ms per non bloccare il primo paint
-  const [showAstronaut, setShowAstronaut] = useState(false);
-  // Monta l'elmo solo quando la sezione Anagrafica è vicina alla viewport
-  const [showHelmet, setShowHelmet] = useState(false);
-
-  const { scrollYProgress: globalScrollProgress } = useScroll();
-
-  const { scrollYProgress: heroScrollProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "center start"]
-  });
-
-  const { scrollYProgress: anagraficaScrollProgress } = useScroll({
-    target: anagraficaRef,
-    offset: ["start center", "end start"]
-  });
-
-  const opacityHero = useTransform(heroScrollProgress, [0, 0.5], [1, 0]);
-  const helmetOpacity = useTransform(anagraficaScrollProgress, [0, 0.85], [1, 0]);
-  const helmetY = useTransform(anagraficaScrollProgress, [0, 0.85], ['0px', '-70px']);
 
   useEffect(() => {
     const ids = [
@@ -176,47 +198,19 @@ function App() {
     return () => observer.disconnect();
   }, []);
 
-  // Avvia il download del modello astronauta (45MB) dopo 800ms,
-  // lasciando che il browser finisca prima il primo paint della pagina
-  useEffect(() => {
-    const t = setTimeout(() => setShowAstronaut(true), 800);
-    return () => clearTimeout(t);
-  }, []);
-
-  // Carica l'elmo (2.6MB) solo quando la sezione Anagrafica è a 500px dalla viewport
-  useEffect(() => {
-    const el = anagraficaRef.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setShowHelmet(true);
-          obs.disconnect();
-        }
-      },
-      { rootMargin: '500px' }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-
   return (
     <div className="min-h-screen bg-[#010208] text-white selection:bg-electric-blue/30 font-sans overflow-x-hidden">
       <DemoFormOverlay isOpen={isDemoOpen} onClose={() => setIsDemoOpen(false)} />
 
-      {/* ── 3D background — laptop rotating 90deg per section ── */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <Suspense fallback={<div className="w-full h-full bg-[#010208]" />}>
-          <Background3D scrollProgress={globalScrollProgress} />
-        </Suspense>
-      </div>
+      {/* Background patterns */}
+      <div className="fixed inset-0 z-0 pointer-events-none noise-gradient-orbs bg-grid-pattern" />
 
-      {/* ── Fixed dark overlay — keeps text readable ── */}
+      {/* ── Fixed dark overlay ── */}
       <div className="fixed inset-0 z-[1] bg-[#010208]/45 pointer-events-none" />
 
       {/* ── Navigation ── */}
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 py-4 bg-[#010208]/70 backdrop-blur-lg">
-        <div className="container mx-auto px-5 md:px-8 flex justify-between items-center relative">
+        <div className="container mx-auto px-5 md:px-8 max-w-6xl flex justify-between items-center relative">
 
           <button
             className="md:hidden text-white/80 hover:text-white p-2 -ml-2 z-20 absolute left-4"
@@ -260,28 +254,26 @@ function App() {
       </nav>
 
       {/* ── Hero Section ── */}
-      <section id="hero" ref={heroRef} className="relative h-screen flex items-center justify-center overflow-hidden">
-        {/* Astronaut in foreground — z-20 above hero text (z-10) */}
-        <motion.div
-          style={{ opacity: opacityHero }}
-          className="absolute inset-0 z-[5] md:z-20 pointer-events-none opacity-30 md:opacity-100"
+      <section id="hero" ref={heroRef} className="relative h-[80vh] md:h-[65vh] xl:h-screen flex items-center justify-center overflow-hidden pt-20 md:pt-28 xl:pt-0">
+        {/* Animated GLSL Hills background with mask-image for a super smooth fade out */}
+        <div 
+          className="absolute inset-0 z-0 pointer-events-none"
+          style={{
+            maskImage: 'linear-gradient(to bottom, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0.15) 80%, rgba(0, 0, 0, 0) 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0.15) 80%, rgba(0, 0, 0, 0) 100%)'
+          }}
         >
-          {showAstronaut && (
-            <Suspense fallback={null}>
-              <AstronautHero />
-            </Suspense>
-          )}
-        </motion.div>
+          <GLSLHills width="100%" height="100%" cameraZ={125} planeSize={256} speed={0.5} />
+        </div>
 
-        <motion.div
-          style={{ opacity: opacityHero }}
-          className="relative z-10 container mx-auto px-5 md:px-8 h-full flex flex-col justify-center items-center md:items-start mt-10 md:mt-0"
+        <div
+          className="relative z-10 container mx-auto px-5 md:px-8 h-full flex flex-col justify-center items-center mt-10 md:mt-0"
         >
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="max-w-3xl text-center md:text-left flex flex-col items-center md:items-start w-full"
+            className="max-w-3xl text-center flex flex-col items-center w-full"
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-panel text-xs font-medium text-cyan-glow mb-6 border-cyan-glow/20">
               <span className="relative flex h-2 w-2">
@@ -291,16 +283,16 @@ function App() {
               Enterprise OS 2.0
             </div>
 
-            <h1 className="text-5xl sm:text-5xl md:text-7xl font-bold tracking-tight mb-6">
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight mb-6">
               <span className="text-gradient">La gestione <em>HR</em> in un'unica piattaforma.</span>
             </h1>
 
-            <p className="text-xl md:text-xl text-gray-200 mb-8 md:mb-10 md:pr-8 max-w-2xl">
+            <p className="text-xl md:text-xl text-gray-200 mb-8 md:mb-10 max-w-2xl">
               Trasforma il caos operativo in controllo totale.
               Un ecosistema unico per gestire dati, presenze, turni, scadenze e molto altro.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center md:items-start justify-center md:justify-start gap-4 w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
               <button onClick={openDemo} className="relative group px-10 py-4 rounded-full bg-white text-black font-semibold text-sm overflow-hidden transition-all hover:scale-105 w-fit">
                 <span className="relative flex items-center justify-center gap-2">
                   Richiedi Demo Gratuita <ArrowRight className="w-4 h-4" />
@@ -308,14 +300,14 @@ function App() {
               </button>
             </div>
           </motion.div>
-        </motion.div>
+        </div>
       </section>
 
       {/* ── Main scrollable content ── */}
       <div className="relative z-10 w-full overflow-x-hidden">
 
         {/* Il Problema */}
-        <section id="problema" className="py-20 md:py-32 relative z-10 overflow-hidden flex items-center justify-center">
+        <section id="problema" className="py-12 md:py-16 xl:py-32 relative z-10 overflow-hidden flex items-center justify-center">
           <div className="container mx-auto px-5 md:px-8 max-w-6xl text-center relative z-10">
             <FadeIn>
               <h2 className="text-3xl md:text-5xl font-bold mb-6">Come gestisci la tua <em>azienda</em> oggi?</h2>
@@ -326,12 +318,14 @@ function App() {
             </FadeIn>
 
             <div className="flex flex-col md:flex-row gap-8 text-left">
-              <FadeIn delay={0.2} className="flex-1">
-                <div className="glass-panel backdrop-blur-3xl p-6 md:p-10 rounded-3xl border border-red-500/20 shadow-[0_8px_32px_0_rgba(255,0,0,0.1)] relative overflow-hidden group hover:-translate-y-2 transition-transform duration-300">
-                  <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent pointer-events-none"></div>
-                  <div className="absolute top-0 left-0 w-full h-1 bg-red-500/50"></div>
-                  <h3 className="text-2xl md:text-3xl font-bold mb-6 text-red-400">Prima di DemoHR</h3>
-                  <ul className="space-y-4 md:space-y-5">
+              <FadeIn delay={0.2} className="flex-1 flex">
+                <GlowCard 
+                  glowColor="red" 
+                  customSize={true} 
+                  className="w-full p-6 md:p-10 rounded-3xl border border-red-500/20 shadow-[0_8px_32px_0_rgba(255,0,0,0.1)] hover:-translate-y-2 transition-transform duration-300 flex flex-col justify-start"
+                >
+                  <h3 className="text-2xl md:text-3xl font-bold mb-6 text-red-400 relative z-10">Prima di DemoHR</h3>
+                  <ul className="space-y-4 md:space-y-5 relative z-10">
                     {["Dati del personale sparsi o non aggiornati", "Turni comunicati su WhatsApp con errori e lamentele", "Richieste di ferie/permessi perse in chat o email", "Scadenze normative (visite, sicurezza) dimenticate"].map((item, i) => (
                       <li key={i} className="flex items-start gap-3 md:gap-4 text-gray-200 text-base md:text-lg">
                         <AlertCircle className="w-5 h-5 md:w-6 md:h-6 text-red-500/70 shrink-0 mt-0.5" />
@@ -339,16 +333,17 @@ function App() {
                       </li>
                     ))}
                   </ul>
-                </div>
+                </GlowCard>
               </FadeIn>
 
-              <FadeIn delay={0.4} className="flex-1">
-                <div className="glass-panel backdrop-blur-3xl p-6 md:p-10 rounded-3xl border border-cyan-400/30 shadow-[0_0_50px_rgba(0,229,255,0.15)] relative overflow-hidden group hover:-translate-y-2 transition-transform duration-300">
-                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/10 to-transparent pointer-events-none"></div>
-                  <div className="absolute top-0 left-0 w-full h-1 bg-cyan-glow shadow-[0_0_20px_rgba(0,229,255,0.8)]"></div>
-                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,229,255,0.15)_0%,transparent_60%)] pointer-events-none" />
-                  <h3 className="text-2xl md:text-3xl font-bold mb-6 text-cyan-300">Con DemoHR</h3>
-                  <ul className="space-y-4 md:space-y-5">
+              <FadeIn delay={0.4} className="flex-1 flex">
+                <GlowCard 
+                  glowColor="blue" 
+                  customSize={true} 
+                  className="w-full p-6 md:p-10 rounded-3xl border border-cyan-400/30 shadow-[0_0_50px_rgba(0,229,255,0.15)] hover:-translate-y-2 transition-transform duration-300 flex flex-col justify-start"
+                >
+                  <h3 className="text-2xl md:text-3xl font-bold mb-6 text-cyan-300 relative z-10">Con DemoHR</h3>
+                  <ul className="space-y-4 md:space-y-5 relative z-10">
                     {["Tutti i dati in un'unica piattaforma sicura", "Pianificazione turni centralizzata con notifiche automatiche", "Flusso di approvazione rapido e tracciabile", "Sistema di alert per non perdere nessuna scadenza"].map((item, i) => (
                       <li key={i} className="flex items-start gap-3 md:gap-4 text-gray-300 text-base md:text-lg">
                         <CheckCircle className="w-5 h-5 md:w-6 md:h-6 text-cyan-glow shrink-0 mt-0.5 drop-shadow-[0_0_8px_rgba(0,229,255,0.5)]" />
@@ -356,7 +351,7 @@ function App() {
                       </li>
                     ))}
                   </ul>
-                </div>
+                </GlowCard>
               </FadeIn>
             </div>
           </div>
@@ -364,7 +359,7 @@ function App() {
 
         {/* Moduli */}
         <div id="moduli" className="relative z-20">
-          <div ref={anagraficaRef} className="relative">
+          <div className="relative">
             <FeatureSection
               id="anagrafica"
               iconName="anagrafica"
@@ -380,17 +375,6 @@ function App() {
               align="left"
               imageSrc={imgAnagrafica}
             />
-            {/* Helmet 3D — canvas full-section, modello posizionato in 3D space */}
-            <motion.div
-              style={{ opacity: helmetOpacity, y: helmetY }}
-              className="absolute inset-0 pointer-events-none z-[5]"
-            >
-              {showHelmet && (
-                <Suspense fallback={null}>
-                  <HelmetViewer />
-                </Suspense>
-              )}
-            </motion.div>
           </div>
           <FeatureSection
             id="presenze"
@@ -465,46 +449,58 @@ function App() {
         </div>
 
         {/* Controllo, tracciabilità e supporto */}
-        <section id="controllo" className="py-16 md:py-24 relative z-10 border-t border-white/5 overflow-hidden w-full bg-[#010208]/30">
+        <section id="controllo" className="py-10 md:py-12 xl:py-24 relative z-10 border-t border-white/5 overflow-hidden w-full bg-[#010208]/30">
           <div className="absolute top-0 right-0 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-electric-blue/5 blur-[80px] md:blur-[100px] rounded-full pointer-events-none translate-x-1/2" />
           <div className="container mx-auto px-5 md:px-8 max-w-6xl">
             <FadeIn>
               <h2 className="text-3xl md:text-4xl font-bold text-center mb-10 md:mb-16">Controllo, <em>Tracciabilità</em> e Supporto</h2>
             </FadeIn>
-            <div className="flex flex-col md:flex-row gap-4 md:gap-6">
-              <FadeIn delay={0.1} className="flex-1">
-                <div className="glass-panel p-6 md:p-8 rounded-2xl h-full flex flex-col items-center md:items-start text-center md:text-left">
-                  <FileSpreadsheet className="w-10 h-10 text-cyan-glow mb-6" />
-                  <h3 className="text-xl font-bold mb-3">Esportazione per il Consulente</h3>
-                  <p className="text-gray-200 text-sm flex-1">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              <FadeIn delay={0.1} className="flex-1 flex">
+                <GlowCard 
+                  glowColor="blue" 
+                  customSize={true} 
+                  className="w-full p-6 md:p-8 rounded-2xl border border-cyan-400/20 shadow-[0_8px_32px_rgba(0,229,255,0.05)] hover:-translate-y-2 transition-all duration-300 flex flex-col items-center md:items-start text-center md:text-left justify-start"
+                >
+                  <FileSpreadsheet className="w-10 h-10 text-cyan-glow mb-6 relative z-10" />
+                  <h3 className="text-xl font-bold mb-3 relative z-10">Esportazione per il Consulente</h3>
+                  <p className="text-gray-200 text-sm flex-1 relative z-10">
                     Ogni mese, estrai il report di presenze e assenze pronto per il consulente del lavoro o per l'elaborazione buste paga. Meno errori di trascrizione, meno ritardi.
                   </p>
-                </div>
+                </GlowCard>
               </FadeIn>
-              <FadeIn delay={0.2} className="flex-1">
-                <div className="glass-panel p-6 md:p-8 rounded-2xl h-full flex flex-col items-center md:items-start text-center md:text-left">
-                  <Database className="w-10 h-10 text-blue-400 mb-6" />
-                  <h3 className="text-xl font-bold mb-3">Log delle Attività</h3>
-                  <p className="text-gray-200 text-sm flex-1">
+              <FadeIn delay={0.2} className="flex-1 flex">
+                <GlowCard 
+                  glowColor="blue" 
+                  customSize={true} 
+                  className="w-full p-6 md:p-8 rounded-2xl border border-cyan-400/20 shadow-[0_8px_32px_rgba(0,229,255,0.05)] hover:-translate-y-2 transition-all duration-300 flex flex-col items-center md:items-start text-center md:text-left justify-start"
+                >
+                  <Database className="w-10 h-10 text-blue-400 mb-6 relative z-10" />
+                  <h3 className="text-xl font-bold mb-3 relative z-10">Log delle Attività</h3>
+                  <p className="text-gray-200 text-sm flex-1 relative z-10">
                     "Chi ha cambiato questo turno?" DemoHR traccia ogni azione (chi ha fatto cosa e quando), garantendo totale trasparenza e responsabilizzazione.
                   </p>
-                </div>
+                </GlowCard>
               </FadeIn>
-              <FadeIn delay={0.3} className="flex-1">
-                <div className="glass-panel p-6 md:p-8 rounded-2xl h-full flex flex-col items-center md:items-start text-center md:text-left">
-                  <LayoutDashboard className="w-10 h-10 text-indigo-400 mb-6" />
-                  <h3 className="text-xl font-bold mb-3">Guide Integrati e AI</h3>
-                  <p className="text-gray-200 text-sm flex-1">
+              <FadeIn delay={0.3} className="flex-1 flex md:col-span-2 xl:col-span-1">
+                <GlowCard 
+                  glowColor="blue" 
+                  customSize={true} 
+                  className="w-full p-6 md:p-8 rounded-2xl border border-cyan-400/20 shadow-[0_8px_32px_rgba(0,229,255,0.05)] hover:-translate-y-2 transition-all duration-300 flex flex-col items-center md:items-start text-center md:text-left justify-start"
+                >
+                  <LayoutDashboard className="w-10 h-10 text-indigo-400 mb-6 relative z-10" />
+                  <h3 className="text-xl font-bold mb-3 relative z-10">Guide Integrati e AI</h3>
+                  <p className="text-gray-200 text-sm flex-1 relative z-10">
                     Non sei solo: tutorial passo-passo dentro l'app e la possibilità di chiedere supporto a un assistente virtuale istruito sul funzionamento della piattaforma.
                   </p>
-                </div>
+                </GlowCard>
               </FadeIn>
             </div>
           </div>
         </section>
 
         {/* CTA Finale */}
-        <section id="cta" className="py-24 relative text-center border-t border-white/5 overflow-hidden w-full bg-[#010208]/30">
+        <section id="cta" className="py-12 md:py-16 xl:py-24 relative text-center border-t border-white/5 overflow-hidden w-full bg-[#010208]/30">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,85,255,0.08)_0%,transparent_50%)] pointer-events-none" />
           <div className="container mx-auto px-5 md:px-8 relative z-10 max-w-3xl">
             <FadeIn>

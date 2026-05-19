@@ -24,13 +24,21 @@ h2 {
   line-height: 1.1;
 }
 
+.module-title {
+  font-family: 'Playfair Display', Georgia, Cambria, "Times New Roman", Times, serif;
+  font-style: italic;
+  font-weight: 700;
+}
+
 h3 {
   font-weight: 700;
   line-height: 1.15;
 }
-
 em {
+  font-family: 'Playfair Display', Georgia, Cambria, "Times New Roman", Times, serif;
   font-style: italic;
+  color: #00E5FF;
+  text-shadow: 0 0 20px rgba(0, 229, 255, 0.25);
 }
 
 p, li, blockquote {
@@ -49,14 +57,25 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   box-sizing: border-box;
-  scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
 }
 
+@media (min-width: 1280px) {
+  html, body {
+    scroll-snap-type: y mandatory;
+  }
+}
+
 section {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-  min-height: 100vh;
+  min-height: auto;
+}
+
+@media (min-width: 1280px) {
+  section {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    min-height: 100vh;
+  }
 }
 
 *, *::before, *::after {
