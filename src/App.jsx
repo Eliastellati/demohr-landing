@@ -227,7 +227,8 @@ function App() {
             )}
           </button>
 
-          <div className="flex items-center justify-center w-full md:w-auto md:justify-start">
+          <div className="flex items-center justify-center w-full md:w-auto md:justify-start gap-2.5">
+            <span className="hidden md:inline text-xl font-bold tracking-tight text-white">SynchHR</span>
             <img src={logoNoBg} alt="SynchHR Logo" className="h-10 w-auto" />
           </div>
 
