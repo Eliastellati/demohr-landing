@@ -117,7 +117,7 @@ export default function DemoFormOverlay({ isOpen, onClose }) {
               <div className="flex items-center gap-3">
                 <span className="h-px w-6 bg-cyan-glow/40" />
                 <span className="text-[11px] tracking-[0.22em] uppercase text-cyan-glow/60">
-                  DemoHR
+                  SynchHR
                 </span>
               </div>
 
@@ -316,7 +316,7 @@ export default function DemoFormOverlay({ isOpen, onClose }) {
                     </h3>
 
                     <p className="text-white/35 text-sm leading-relaxed mb-10" style={{ fontFamily: 'DM Sans' }}>
-                      Il team DemoHR ti contatterà a breve per organizzare la demo personalizzata.
+                      Il team SynchHR ti contatterà a breve per organizzare la demo personalizzata.
                     </p>
 
                     <button

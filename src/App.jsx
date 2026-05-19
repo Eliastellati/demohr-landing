@@ -228,7 +228,7 @@ function App() {
           </button>
 
           <div className="flex items-center justify-center w-full md:w-auto md:justify-start">
-            <img src={logoNoBg} alt="DemoHR Logo" className="h-10 w-auto" />
+            <img src={logoNoBg} alt="SynchHR Logo" className="h-10 w-auto" />
           </div>
 
           <div className="hidden md:flex gap-10 text-base font-medium text-white/70 items-center">
@@ -324,7 +324,7 @@ function App() {
                   customSize={true} 
                   className="w-full p-6 md:p-10 rounded-3xl border border-red-500/20 shadow-[0_8px_32px_0_rgba(255,0,0,0.1)] hover:-translate-y-2 transition-transform duration-300 flex flex-col justify-start"
                 >
-                  <h3 className="text-2xl md:text-3xl font-bold mb-6 text-red-400 relative z-10">Prima di DemoHR</h3>
+                  <h3 className="text-2xl md:text-3xl font-bold mb-6 text-red-400 relative z-10">Prima di SynchHR</h3>
                   <ul className="space-y-4 md:space-y-5 relative z-10">
                     {["Dati del personale sparsi o non aggiornati", "Turni comunicati su WhatsApp con errori e lamentele", "Richieste di ferie/permessi perse in chat o email", "Scadenze normative (visite, sicurezza) dimenticate"].map((item, i) => (
                       <li key={i} className="flex items-start gap-3 md:gap-4 text-gray-200 text-base md:text-lg">
@@ -342,7 +342,7 @@ function App() {
                   customSize={true} 
                   className="w-full p-6 md:p-10 rounded-3xl border border-cyan-400/30 shadow-[0_0_50px_rgba(0,229,255,0.15)] hover:-translate-y-2 transition-transform duration-300 flex flex-col justify-start"
                 >
-                  <h3 className="text-2xl md:text-3xl font-bold mb-6 text-cyan-300 relative z-10">Con DemoHR</h3>
+                  <h3 className="text-2xl md:text-3xl font-bold mb-6 text-cyan-300 relative z-10">Con SynchHR</h3>
                   <ul className="space-y-4 md:space-y-5 relative z-10">
                     {["Tutti i dati in un'unica piattaforma sicura", "Pianificazione turni centralizzata con notifiche automatiche", "Flusso di approvazione rapido e tracciabile", "Sistema di alert per non perdere nessuna scadenza"].map((item, i) => (
                       <li key={i} className="flex items-start gap-3 md:gap-4 text-gray-300 text-base md:text-lg">
@@ -367,7 +367,7 @@ function App() {
               subtitle="Il cuore dei tuoi dati"
               content={
                 <>
-                  <p>Niente più faldoni o file excel obsoleti. In DemoHR avrai una scheda dipendente digitale, costantemente aggiornata.</p>
+                  <p>Niente più faldoni o file excel obsoleti. In SynchHR avrai una scheda dipendente digitale, costantemente aggiornata.</p>
                   <p>Ogni persona ha un profilo con ruoli, competenze e documenti allegati, oltre a un sistema di tag e note per una profilazione personalizzata.</p>
                 </>
               }
@@ -383,7 +383,7 @@ function App() {
             subtitle="Dimentica il vecchio cartellino"
             content={
               <>
-                <p>DemoHR permette la timbratura digitale in modo semplice e sicuro. I dipendenti possono registrare ingresso, pausa e uscita direttamente da smartphone o tablet condiviso, anche tramite badge NFC.</p>
+                <p>SynchHR permette la timbratura digitale in modo semplice e sicuro. I dipendenti possono registrare ingresso, pausa e uscita direttamente da smartphone o tablet condiviso, anche tramite badge NFC.</p>
               </>
             }
             features={["Timbratura in app (anche in base alla geolocalizzazione autorizzata)", "Supporto per Badge NFC", "Visualizzazione ore lavorate in tempo reale"]}
@@ -439,7 +439,7 @@ function App() {
             subtitle="Zero rischi normativi"
             content={
               <>
-                <p>DemoHR ti avvisa prima che sia troppo tardi. Pianifica le visite mediche del lavoro, tieni traccia degli attestati sulla sicurezza e gestisci l'assegnazione delle dotazioni (DPI, chiavi, veicoli) in modo inattaccabile.</p>
+                <p>SynchHR ti avvisa prima che sia troppo tardi. Pianifica le visite mediche del lavoro, tieni traccia degli attestati sulla sicurezza e gestisci l'assegnazione delle dotazioni (DPI, chiavi, veicoli) in modo inattaccabile.</p>
               </>
             }
             features={["Dashboard delle scadenze imminenti", "Log della consegna DPI e dotazioni", "Archivio certificati"]}
@@ -478,7 +478,7 @@ function App() {
                   <Database className="w-10 h-10 text-blue-400 mb-6 relative z-10" />
                   <h3 className="text-xl font-bold mb-3 relative z-10">Log delle Attività</h3>
                   <p className="text-gray-200 text-sm flex-1 relative z-10">
-                    "Chi ha cambiato questo turno?" DemoHR traccia ogni azione (chi ha fatto cosa e quando), garantendo totale trasparenza e responsabilizzazione.
+                    "Chi ha cambiato questo turno?" SynchHR traccia ogni azione (chi ha fatto cosa e quando), garantendo totale trasparenza e responsabilizzazione.
                   </p>
                 </GlowCard>
               </FadeIn>
@@ -511,7 +511,7 @@ function App() {
                 Riporta l'<em>ordine</em> in azienda. <br/>Il tuo team ringrazierà.
               </h2>
               <p className="text-lg md:text-xl text-gray-200 mb-6">
-                L'implementazione è rapida e il team di DemoHR ti seguirà nell'onboarding per garantirti un passaggio fluido dal caos all'efficienza.
+                L'implementazione è rapida e il team di SynchHR ti seguirà nell'onboarding per garantirti un passaggio fluido dal caos all'efficienza.
               </p>
               <button onClick={openDemo} className="px-8 md:px-10 py-4 md:py-5 rounded-full bg-white text-black font-bold text-base md:text-lg hover:scale-105 transition-transform hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] w-fit mx-auto mb-2">
                 Contattaci per una demo gratuita
@@ -522,7 +522,7 @@ function App() {
 
         {/* Footer */}
         <footer className="border-t border-white/10 pt-3 pb-1 md:py-4 text-center text-gray-500 text-xs bg-[#010208]/70">
-          <p>&copy; {new Date().getFullYear()} DemoHR. Tutti i diritti riservati.</p>
+          <p>&copy; {new Date().getFullYear()} SynchHR. Tutti i diritti riservati.</p>
         </footer>
       </div>
     </div>
