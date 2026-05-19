@@ -98,56 +98,73 @@ const GlowCard = ({
   };
 
   const beforeAfterStyles = `
-    [data-glow]::before,
-    [data-glow]::after {
-      pointer-events: none;
-      content: "";
-      position: absolute;
-      inset: calc(var(--border-size) * -1);
-      border: var(--border-size) solid transparent;
-      border-radius: calc(var(--radius) * 1px);
-      background-repeat: no-repeat;
+    @media (min-width: 1024px) {
+      [data-glow]::before,
+      [data-glow]::after {
+        pointer-events: none;
+        content: "";
+        position: absolute;
+        inset: calc(var(--border-size) * -1);
+        border: var(--border-size) solid transparent;
+        border-radius: calc(var(--radius) * 1px);
+        background-repeat: no-repeat;
+        
+        /* Standard masking */
+        mask: linear-gradient(transparent, transparent), linear-gradient(white, white);
+        mask-clip: padding-box, border-box;
+        mask-composite: intersect;
+        
+        /* Webkit / Chrome / Safari compatibility masking */
+        -webkit-mask: linear-gradient(transparent, transparent) padding-box, linear-gradient(white, white) border-box;
+        -webkit-mask-composite: destination-in;
+      }
       
-      /* Standard masking */
-      mask: linear-gradient(transparent, transparent), linear-gradient(white, white);
-      mask-clip: padding-box, border-box;
-      mask-composite: intersect;
+      [data-glow]::before {
+        background-image: radial-gradient(
+          calc(var(--spotlight-size) * 0.75) calc(var(--spotlight-size) * 0.75) at
+          calc(var(--x, 0) * 1px)
+          calc(var(--y, 0) * 1px),
+          hsl(var(--hue, 210) 100% 60% / 1), transparent 100%
+        );
+        filter: brightness(1.5);
+      }
       
-      /* Webkit / Chrome / Safari compatibility masking */
-      -webkit-mask: linear-gradient(transparent, transparent) padding-box, linear-gradient(white, white) border-box;
-      -webkit-mask-composite: destination-in;
+      [data-glow]::after {
+        background-image: radial-gradient(
+          calc(var(--spotlight-size) * 0.5) calc(var(--spotlight-size) * 0.5) at
+          calc(var(--x, 0) * 1px)
+          calc(var(--y, 0) * 1px),
+          hsl(0 100% 100% / 0.5), transparent 100%
+        );
+      }
+      
+      [data-glow] [data-glow] {
+        position: absolute;
+        inset: 0;
+        will-change: filter;
+        opacity: var(--outer, 1);
+        border-radius: calc(var(--radius) * 1px);
+        border-width: calc(var(--border-size) * 20);
+        filter: blur(calc(var(--border-size) * 10));
+        background: none;
+        pointer-events: none;
+        border: none;
+      }
     }
-    
-    [data-glow]::before {
-      background-image: radial-gradient(
-        calc(var(--spotlight-size) * 0.75) calc(var(--spotlight-size) * 0.75) at
-        calc(var(--x, 0) * 1px)
-        calc(var(--y, 0) * 1px),
-        hsl(var(--hue, 210) 100% 60% / 1), transparent 100%
-      );
-      filter: brightness(1.5);
-    }
-    
-    [data-glow]::after {
-      background-image: radial-gradient(
-        calc(var(--spotlight-size) * 0.5) calc(var(--spotlight-size) * 0.5) at
-        calc(var(--x, 0) * 1px)
-        calc(var(--y, 0) * 1px),
-        hsl(0 100% 100% / 0.5), transparent 100%
-      );
-    }
-    
-    [data-glow] [data-glow] {
-      position: absolute;
-      inset: 0;
-      will-change: filter;
-      opacity: var(--outer, 1);
-      border-radius: calc(var(--radius) * 1px);
-      border-width: calc(var(--border-size) * 20);
-      filter: blur(calc(var(--border-size) * 10));
-      background: none;
-      pointer-events: none;
-      border: none;
+
+    @media (max-width: 1023px) {
+      [data-glow] {
+        border-color: hsla(var(--base), 100%, 70%, 0.15) !important;
+        background-image: radial-gradient(
+          120% 120% at 50% 50%,
+          hsl(var(--base) 100% 70% / 0.04), transparent 80%
+        ) !important;
+        box-shadow: 0 0 25px hsla(var(--base), 100%, 70%, 0.08) !important;
+      }
+      [data-glow]::before,
+      [data-glow]::after {
+        display: none !important;
+      }
     }
   `;
 
