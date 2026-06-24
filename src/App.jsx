@@ -8,7 +8,6 @@ import {
 import DemoFormOverlay from './DemoFormOverlay';
 import { GLSLHills } from './GLSLHills';
 import { GlowCard } from './GlowCard';
-import logoNoBg from '../images/logo_no_bg.png';
 import imgAnagrafica from '../images/Anagrafica.png';
 import imgPresenze from '../images/presenze.png';
 import imgTurni from '../images/turni.png';
@@ -88,7 +87,7 @@ const FeatureSection = ({ id, title, subtitle, content, align = "left", iconName
                 <Icon className="w-6 h-6 text-cyan-glow" />
               </div>
               <h2 className="text-3xl xl:text-4xl module-title mb-4">{title}</h2>
-              {subtitle && <h3 className="text-xl text-blue-400 mb-6">{subtitle}</h3>}
+              {subtitle && <h3 className="text-xl text-blue-400 mb-6 font-nevera">{subtitle}</h3>}
               <div className="text-gray-100 text-lg space-y-4">
                 {content}
               </div>
@@ -227,9 +226,9 @@ function App() {
             )}
           </button>
 
-          <div className="flex items-center justify-center w-full md:w-auto md:justify-start gap-1">
-            <span className="hidden md:inline text-xl font-bold tracking-tight text-white">SynchHR</span>
-            <img src={logoNoBg} alt="SynchHR Logo" className="h-10 w-auto" />
+          <div className="flex items-center justify-center w-full md:w-auto md:justify-start gap-4">
+            <img src="/images/syncHR_type.png" alt="SyncHR" className="hidden md:inline h-[30px] w-auto" />
+            <img src="/images/libreria_white_no_bg.png" alt="SyncHR Logo" className="h-[48px] md:h-[54px] w-auto" />
           </div>
 
           <div className="hidden md:flex gap-10 text-base font-medium text-white/70 items-center">
@@ -325,7 +324,7 @@ function App() {
                   customSize={true} 
                   className="w-full p-6 md:p-10 rounded-3xl border border-red-500/20 shadow-[0_8px_32px_0_rgba(255,0,0,0.1)] hover:-translate-y-2 transition-transform duration-300 flex flex-col justify-start"
                 >
-                  <h3 className="text-2xl md:text-3xl font-bold mb-6 text-red-400 relative z-10">Prima di SynchHR</h3>
+                  <h3 className="text-2xl md:text-3xl font-bold mb-6 text-red-400 relative z-10">Prima di SyncHR</h3>
                   <ul className="space-y-4 md:space-y-5 relative z-10">
                     {["Dati del personale sparsi o non aggiornati", "Turni comunicati su WhatsApp con errori e lamentele", "Richieste di ferie/permessi perse in chat o email", "Scadenze normative (visite, sicurezza) dimenticate"].map((item, i) => (
                       <li key={i} className="flex items-start gap-3 md:gap-4 text-gray-200 text-base md:text-lg">
@@ -343,7 +342,7 @@ function App() {
                   customSize={true} 
                   className="w-full p-6 md:p-10 rounded-3xl border border-cyan-400/30 shadow-[0_0_50px_rgba(0,229,255,0.15)] hover:-translate-y-2 transition-transform duration-300 flex flex-col justify-start"
                 >
-                  <h3 className="text-2xl md:text-3xl font-bold mb-6 text-cyan-300 relative z-10">Con SynchHR</h3>
+                  <h3 className="text-2xl md:text-3xl font-bold mb-6 text-cyan-300 relative z-10">Con SyncHR</h3>
                   <ul className="space-y-4 md:space-y-5 relative z-10">
                     {["Tutti i dati in un'unica piattaforma sicura", "Pianificazione turni centralizzata con notifiche automatiche", "Flusso di approvazione rapido e tracciabile", "Sistema di alert per non perdere nessuna scadenza"].map((item, i) => (
                       <li key={i} className="flex items-start gap-3 md:gap-4 text-gray-300 text-base md:text-lg">
@@ -368,7 +367,7 @@ function App() {
               subtitle="Il cuore dei tuoi dati"
               content={
                 <>
-                  <p>Niente più faldoni o file excel obsoleti. In SynchHR avrai una scheda dipendente digitale, costantemente aggiornata.</p>
+                  <p>Niente più faldoni o file excel obsoleti. In SyncHR avrai una scheda dipendente digitale, costantemente aggiornata.</p>
                   <p>Ogni persona ha un profilo con ruoli, competenze e documenti allegati, oltre a un sistema di tag e note per una profilazione personalizzata.</p>
                 </>
               }
@@ -384,7 +383,7 @@ function App() {
             subtitle="Dimentica il vecchio cartellino"
             content={
               <>
-                <p>SynchHR permette la timbratura digitale in modo semplice e sicuro. I dipendenti possono registrare ingresso, pausa e uscita direttamente da smartphone o tablet condiviso, anche tramite badge NFC.</p>
+                <p>SyncHR permette la timbratura digitale in modo semplice e sicuro. I dipendenti possono registrare ingresso, pausa e uscita direttamente da smartphone o tablet condiviso, anche tramite badge NFC.</p>
               </>
             }
             features={["Timbratura in app (anche in base alla geolocalizzazione autorizzata)", "Supporto per Badge NFC", "Visualizzazione ore lavorate in tempo reale"]}
@@ -440,7 +439,7 @@ function App() {
             subtitle="Zero rischi normativi"
             content={
               <>
-                <p>SynchHR ti avvisa prima che sia troppo tardi. Pianifica le visite mediche del lavoro, tieni traccia degli attestati sulla sicurezza e gestisci l'assegnazione delle dotazioni (DPI, chiavi, veicoli) in modo inattaccabile.</p>
+                <p>SyncHR ti avvisa prima che sia troppo tardi. Pianifica le visite mediche del lavoro, tieni traccia degli attestati sulla sicurezza e gestisci l'assegnazione delle dotazioni (DPI, chiavi, veicoli) in modo inattaccabile.</p>
               </>
             }
             features={["Dashboard delle scadenze imminenti", "Log della consegna DPI e dotazioni", "Archivio certificati"]}
@@ -479,7 +478,7 @@ function App() {
                   <Database className="w-10 h-10 text-blue-400 mb-6 relative z-10" />
                   <h3 className="text-xl font-bold mb-3 relative z-10">Log delle Attività</h3>
                   <p className="text-gray-200 text-sm flex-1 relative z-10">
-                    "Chi ha cambiato questo turno?" SynchHR traccia ogni azione (chi ha fatto cosa e quando), garantendo totale trasparenza e responsabilizzazione.
+                    "Chi ha cambiato questo turno?" SyncHR traccia ogni azione (chi ha fatto cosa e quando), garantendo totale trasparenza e responsabilizzazione.
                   </p>
                 </GlowCard>
               </FadeIn>
@@ -512,7 +511,7 @@ function App() {
                 Riporta l'<em>ordine</em> in azienda. <br/>Il tuo team ringrazierà.
               </h2>
               <p className="text-lg md:text-xl text-gray-200 mb-6">
-                L'implementazione è rapida e il team di SynchHR ti seguirà nell'onboarding per garantirti un passaggio fluido dal caos all'efficienza.
+                L'implementazione è rapida e il team di SyncHR ti seguirà nell'onboarding per garantirti un passaggio fluido dal caos all'efficienza.
               </p>
               <button onClick={openDemo} className="px-8 md:px-10 py-4 md:py-5 rounded-full bg-white text-black font-bold text-base md:text-lg hover:scale-105 transition-transform hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] w-fit mx-auto mb-2">
                 Contattaci per una demo gratuita
@@ -523,7 +522,7 @@ function App() {
 
         {/* Footer */}
         <footer className="border-t border-white/10 pt-3 pb-1 md:py-4 text-center text-gray-500 text-xs bg-[#010208]/70">
-          <p>&copy; {new Date().getFullYear()} SynchHR. Tutti i diritti riservati.</p>
+          <p>&copy; {new Date().getFullYear()} SyncHR. Tutti i diritti riservati.</p>
         </footer>
       </div>
     </div>

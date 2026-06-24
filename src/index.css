@@ -34,6 +34,10 @@ h3 {
   font-weight: 700;
   line-height: 1.15;
 }
+
+.font-nevera {
+  font-family: 'nevera', sans-serif;
+}
 em {
   font-family: 'Playfair Display', Georgia, Cambria, "Times New Roman", Times, serif;
   font-style: italic;
